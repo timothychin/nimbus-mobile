@@ -111,7 +111,6 @@ export function getPinsPublic(currentUser) {
       }
     })
     .then((response) => response.json())
-// <<<<<<< HEAD
       .then((data) => {
         var markers = [];          
         for (var i = 0; i < data.length; i++) {
