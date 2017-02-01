@@ -30,6 +30,7 @@ export function getFriends(userId) {
       dispatch(setFriends({ friends }));
     })
     .catch((error) => {
+      handleError();
       console.warn(error);
     }).done();
   };
@@ -57,35 +58,10 @@ export function getPins(currentUser) {
     })
     .then((response) => response.json())
     .then((data) => {
-      var markers = [];
-      for (var i = 0; i < data.length; i++) {
-        markers.push({
-          id: i,
-          pinID: data[i]._fields[0].properties.id,
-          location: {
-            latitude: JSON.parse(data[i]._fields[0].properties.location).latitude,
-            longitude: JSON.parse(data[i]._fields[0].properties.location).longitude,
-          },
-          mediaURL: data[i]._fields[0].properties.mediaUrl,
-          likes: data[i]._fields[0].properties.likes,
-          description: data[i]._fields[0].properties.description,
-          createdAt: data[i]._fields[0].properties.createdAt,
-          firstName: helpers.capitalizeFirstChar(data[i]._fields[1].properties.firstName),
-          lastName: helpers.capitalizeFirstChar(data[i]._fields[1].properties.lastName),
-          profileUrl: data[i]._fields[1].properties.photo,
-          email: data[i]._fields[1].properties.email || 'Facebook User',
-          userId: data[i]._fields[1].properties.id,
-          pinColor: mapToColor[data[i]._fields[0].properties.category],
-          category: data[i]._fields[0].properties.category, 
-        });
-      }
-
-      dispatch(handlePins({ markers }));
+      setPinData(data);
     })
     .catch((error) => {
-      console.log("*** ERROR ***");
-      console.log(error);
-      throw error;
+      handleError();
     });
   };
 }
@@ -112,42 +88,41 @@ export function getPinsPublic(currentUser) {
     })
     .then((response) => response.json())
       .then((data) => {
-        var markers = [];          
-        for (var i = 0; i < data.length; i++) {
-          markers.push({
-            id: i,
-            pinID: data[i]._fields[0].properties.id,
-            location: {
-              latitude: JSON.parse(data[i]._fields[0].properties.location).latitude,
-              longitude: JSON.parse(data[i]._fields[0].properties.location).longitude,
-            },
-            mediaURL: data[i]._fields[0].properties.mediaUrl,
-            likes: data[i]._fields[0].properties.likes,
-            description: data[i]._fields[0].properties.description,
-            createdAt: data[i]._fields[0].properties.createdAt,
-            firstName: helpers.capitalizeFirstChar(data[i]._fields[1].properties.firstName),
-            lastName: helpers.capitalizeFirstChar(data[i]._fields[1].properties.lastName),
-            profileUrl: data[i]._fields[1].properties.photo,
-            email: data[i]._fields[1].properties.email || 'Facebook User',
-            userId: data[i]._fields[1].properties.id,
-            pinColor: mapToColor[data[i]._fields[0].properties.category],
-            category: data[i]._fields[0].properties.category,
-          });
-        }
-        dispatch(handlePins({ markers }));
+        setPinData(data);
       }).catch((error) => {
-        console.log('error');
-        console.log(error);
+        handleError();
       })
-
     .catch((error) => {
-      console.log("UserActions.js: getPins(): *** ERROR ***");
-      console.log(error);
-      throw error;
+      handleError();
     });
   };
 }
 
+export function setPinData(data) {
+  var markers = [];          
+  for (var i = 0; i < data.length; i++) {
+    markers.push({
+      id: i,
+      pinID: data[i]._fields[0].properties.id,
+      location: {
+        latitude: JSON.parse(data[i]._fields[0].properties.location).latitude,
+        longitude: JSON.parse(data[i]._fields[0].properties.location).longitude,
+      },
+      mediaURL: data[i]._fields[0].properties.mediaUrl,
+      likes: data[i]._fields[0].properties.likes,
+      description: data[i]._fields[0].properties.description,
+      createdAt: data[i]._fields[0].properties.createdAt,
+      firstName: helpers.capitalizeFirstChar(data[i]._fields[1].properties.firstName),
+      lastName: helpers.capitalizeFirstChar(data[i]._fields[1].properties.lastName),
+      profileUrl: data[i]._fields[1].properties.photo,
+      email: data[i]._fields[1].properties.email || 'Facebook User',
+      userId: data[i]._fields[1].properties.id,
+      pinColor: mapToColor[data[i]._fields[0].properties.category],
+      category: data[i]._fields[0].properties.category,
+    });
+  }
+  dispatch(handlePins({ markers }));
+}
 
 export function setCurrentUser({ currentUser }) {
   return {
@@ -174,6 +149,11 @@ export function setToken(token) {
     type: types.SET_TOKEN,
     token,
   };
+}
+
+export function handleError(error) {
+  console.log("*** ERROR ***", error);
+  throw error;
 }
 
 export function signInWithFacebook() {
@@ -223,15 +203,12 @@ export function signInWithFacebook() {
                   dispatch(setCurrentUser({ currentUser: data.user }));
                 })
                 .catch(function (err) {
-                  console.log(`UserActions.js: signInWithFacebook(): POST ${API_URL}/api/users *** ERROR ***`);
-                  console.log(err);
+                  handleError();
                 });   
             });
           })
           .catch((error) => {
-            console.log("UserActions.js: signInWithFacebook(): GET https://graph.facebook.com/${info.id}/picture?type=large *** ERROR ***");
-            console.log(err);
-            throw err;
+            handleError();
           });
         }
       });
