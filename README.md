@@ -39,19 +39,19 @@ To start up a local build of the app, you'll need to download the [Exponent XDE]
 ## Screenshots
 
 #### Login Screen
-<img src="http://i.imgur.com/ZIJnY54.png" alt="Login Screen" style="width: 305px;"/>
+<img src="http://i.imgur.com/ZIJnY54.png" alt="Login Screen" width="305px"/>
 
 #### Home Screen
 
-<img src="http://i.imgur.com/H5lcCMx.jpg" alt="Home Screen" style="width: 305px;"/>
+<img src="http://i.imgur.com/H5lcCMx.jpg" alt="Home Screen" width="305px"/>
 
 #### Pin Screen
 
-<img src="http://i.imgur.com/kQiycYu.jpg" alt="Pin Screen" style="width: 305px;"/>
+<img src="http://i.imgur.com/kQiycYu.jpg" alt="Pin Screen" width="305px"/>
 
 #### Profile Screen
 
-<img src="http://i.imgur.com/CEOCPjp.jpg" alt="Profile Screen" style="width: 305px;"/>
+<img src="http://i.imgur.com/CEOCPjp.jpg" alt="Profile Screen" width="305px"/>
 
 
 
